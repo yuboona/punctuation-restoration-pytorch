@@ -62,6 +62,7 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 4. 记录最佳损失Loss
 
 定制train代码，选择mini-batch反向传递策略，还有epoch反向传递更新一次的策略？？？
+
 $$
 \text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right)
                        = -x[class] + \log\left(\sum_j \exp(x[j])\right)
