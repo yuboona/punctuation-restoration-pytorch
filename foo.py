@@ -22,14 +22,15 @@ class TxtDataset(data.Dataset):  # 这是一个Dataset子类
 
 
 if __name__ == "__main__":
-    # ****测试在列表生成式中使用两个for****
+    # ****测试在列表生成式中使用两个for**********************************************
     # tmp_seqs = ['asd aa', 'as11 qq', 'aaaas 223233']
     # txt_seqs = [i for seq in tmp_seqs for i in seq.split()]
     # print(txt_seqs)
     # foo = [1, 2, 4, 5,3, 4, 5]
     # print(foo[2:4])
+    # **************************************************************************
 
-    # *****测试使用dataloader取batchsize的具体情况*****
+    # *****测试使用dataloader取batchsize的具体情况*********************************
     # test = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     # inputing = torch.tensor(np.array([test[i:i + 3] for i in range(10)]))
     # target = torch.tensor(np.array([test[i:i + 1] for i in range(10)]))
@@ -46,22 +47,27 @@ if __name__ == "__main__":
     #     #         ).unsqueeze(0) for j in range(len(x[0]))
     #     # )
     # )
+    # **************************************************************************
 
-    # 测试自己的PuncDataset对象*********************************************************
-    torch_dataset = data_class.PuncDataset(
+    # 测试自己的PuncDataset对象***************************************************
+    """ torch_dataset = data_class.PuncDataset(
                                             './data/train',
                                             './data/vocab',
                                             './data/punc'
                                             )
     print(torch_dataset[:4])
-    randS = RandomSampler(torch_dataset, num_samples=100)  # num_samples是指取总数中的多少个数据作为样本集合，不指定则默认取整个数据集
+    randSampler = RandomSampler(
+        torch_dataset,
+        replacement=True,
+        num_samples=100
+        )  # num_samples是指取总数中的多少个数据作为样本集合，不指定则默认取整个数据集
     SeqSampler = SeqBatchSampler(
         torch_dataset.in_len,
         batch_size=4
         )
     sampler = BatchSampler(
-        SequentialSampler(torch_dataset),  
-        batch_size=4, 
+        SequentialSampler(torch_dataset),
+        batch_size=4,
         drop_last=True
         )
     loader = data.DataLoader(
@@ -72,7 +78,7 @@ if __name__ == "__main__":
     )
     count = 0
     # print(torch_dataset.id2index)
-    with open('out', 'w', encoding='utf-8') as w:
+    with open('./out/out.dat', 'w', encoding='utf-8') as w:
         for (i, j) in loader:
             # print("first:", i)
             # print("second:", j)
@@ -88,5 +94,26 @@ if __name__ == "__main__":
                 w.write('\n')
                 print('\n')
                 w.write('*********************************')
-                print('*********************************')
-#*************************************************************************************
+                print('*********************************') """
+    # ***********************************************************************
+
+    # 测试loader的迭代值***************************************************
+    torch_dataset = data_class.PuncDataset(
+                                            './data/train',
+                                            './data/vocab',
+                                            './data/punc'
+                                            )
+    print(torch_dataset[:4])
+    randSampler = RandomSampler(
+        torch_dataset,
+        replacement=True,
+        num_samples=100
+        )  # num_samples是指取总数中的多少个数据作为样本集合，不指定则默认取整个数据集
+    loader = data.DataLoader(
+        dataset=torch_dataset,
+        # batch_size=4,
+        shuffle=False,
+        sampler=randSampler
+    )
+    for m, (i, j) in enumerate(loader):
+        print(k)

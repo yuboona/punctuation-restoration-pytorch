@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import torch.utils.data as data
 import os
+from SeqSampler import SeqBatchSampler
 
 """Dataset 和 Dataloader是torch中的一套工具，
 继承并改造Dataset将数据进行必要的格式化，则Dataloader
@@ -98,3 +99,29 @@ def load_vocab(vocab_path, extra_word_list=[], encoding='utf-8'):
     return vocab
 
 
+def get_loader(train_path, vocab_path, punc_path, batch_size=1):
+    """return the dataloader for loading data from own data file
+
+    Parameters
+    ----------
+    train_path : str
+        training data
+    vocab_path : str
+        vocab for all data
+    punc_path : str
+        punctuation set in data
+    batch_size : int, optional
+        batch_size for training, by default 1
+    """
+
+    dataset = PuncDataset(train_path, vocab_path, punc_path)
+    SeqSampler = SeqBatchSampler(
+        dataset.in_len,
+        batch_size=4
+        )
+    data_loader = data.DataLoader(
+        dataset=dataset,
+        shuffle=False,
+        batch_sampler=SeqSampler
+        )
+    return data_loader

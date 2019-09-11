@@ -9,21 +9,6 @@ class SeqBatchSampler(Sampler):
     为了使用dataloader时，避免由于自动规划batch导致的数据断开，
     SeqBatchSampler，继承Sampler类，实现了batch间数据连续的取样方法
     """
-    r"""Wraps another sampler to yield a mini-batch of indices.
-
-    Args:
-        sampler (Sampler): Base sampler.
-        batch_size (int): Size of mini-batch.
-        drop_last (bool): If ``True``, the sampler will drop the last batch if
-            its size would be less than ``batch_size``
-
-    Example:
-        >>> list(BatchSampler(SequentialSampler(range(10)), batch_size=3, drop_last=False))
-        [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
-        >>> list(BatchSampler(SequentialSampler(range(10)), batch_size=3, drop_last=True))
-        [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
-    """
-
     def __init__(self, data_len, batch_size=1, drop_last=True):
         # 异常处理
         if not isinstance(batch_size, int) or isinstance(batch_size, bool) or \
