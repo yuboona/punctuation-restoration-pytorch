@@ -63,10 +63,7 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 
 定制train代码，选择mini-batch反向传递策略，还有epoch反向传递更新一次的策略？？？
 
-$$
-\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right)
-                       = -x[class] + \log\left(\sum_j \exp(x[j])\right)
-$$
+<img src="https://latex.codecogs.com/gif.latex?\text{loss}(x,&space;class)&space;=&space;-\log\left(\frac{\exp(x[class])}{\sum_j&space;\exp(x[j])}\right)&space;=&space;-x[class]&space;&plus;&space;\log\left(\sum_j&space;\exp(x[j])\right)" title="\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right) = -x[class] + \log\left(\sum_j \exp(x[j])\right)" />
 
 ## 画图
 
