@@ -1,5 +1,9 @@
 # pytorch搭建简单LSTM系统
 
+- Requirements
+  1. python3.6
+  2. torch1.0
+
 ## 1. 主要模块
 
 DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个非常好的选择，使用的逻辑比较简单易懂。
