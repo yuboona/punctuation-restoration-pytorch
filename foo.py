@@ -98,22 +98,28 @@ if __name__ == "__main__":
     # ***********************************************************************
 
     # 测试loader的迭代值***************************************************
-    torch_dataset = data_class.PuncDataset(
-                                            './data/train',
-                                            './data/vocab',
-                                            './data/punc'
-                                            )
-    print(torch_dataset[:4])
-    randSampler = RandomSampler(
-        torch_dataset,
-        replacement=True,
-        num_samples=100
-        )  # num_samples是指取总数中的多少个数据作为样本集合，不指定则默认取整个数据集
-    loader = data.DataLoader(
-        dataset=torch_dataset,
-        # batch_size=4,
-        shuffle=False,
-        sampler=randSampler
-    )
-    for m, (i, j) in enumerate(loader):
-        print(k)
+    # torch_dataset = data_class.PuncDataset(
+    #                                         './data/train',
+    #                                         './data/vocab',
+    #                                         './data/punc'
+    #                                         )
+    # print(torch_dataset[:4])
+    # randSampler = RandomSampler(
+    #     torch_dataset,
+    #     replacement=True,
+    #     num_samples=100
+    #     )  # num_samples是指取总数中的多少个数据作为样本集合，不指定则默认取整个数据集
+    # loader = data.DataLoader(
+    #     dataset=torch_dataset,
+    #     # batch_size=4,
+    #     shuffle=False,
+    #     sampler=randSampler
+    # )
+    # for m, (i, j) in enumerate(loader):
+    #     print()
+
+    print(
+            "sdsda"
+            "asdadsad"
+            "asdasdasd"
+            )

@@ -20,6 +20,7 @@ class PuncDataset(data.Dataset):
     """
     def __init__(self, train_path, vocab_path, punc_path):
         # 检查文件是否存在
+        print(train_path)
         assert os.path.exists(train_path), "train文件不存在"
         assert os.path.exists(vocab_path), "词典文件不存在"
         assert os.path.exists(punc_path), "标点文件不存在"
@@ -79,9 +80,10 @@ class PuncDataset(data.Dataset):
         self.in_len = len(in_id) // 100
         len_tmp = self.in_len * 100
         in_id = in_id[:len_tmp]
-        self.in_id = np.array(in_id).reshape(-1, 100)
+        dt = np.dtype('i8')
+        self.in_id = torch.tensor(np.array(in_id, dtype='i8').reshape(-1, 100))
         label = label[:len_tmp]
-        self.label = np.array(label).reshape(-1, 100)
+        self.label = torch.tensor(np.array(label, dtype='i8').reshape(-1, 100))
         # print('last: ', self.in_id[-1])
         # print('len: ', self.in_len)
 
@@ -113,7 +115,7 @@ def get_loader(train_path, vocab_path, punc_path, batch_size=1):
     batch_size : int, optional
         batch_size for training, by default 1
     """
-
+    print(train_path)
     dataset = PuncDataset(train_path, vocab_path, punc_path)
     SeqSampler = SeqBatchSampler(
         dataset.in_len,
