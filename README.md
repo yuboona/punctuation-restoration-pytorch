@@ -122,7 +122,7 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 2. **自定义Sampler对数据抽样**然后根据batch\_size确定如何通过定制采样函数，完成连续抽样和随机抽样。（参考repo：pytorch\_punctuation的代码，它对于batch的采样，几乎等于随机采样。因为当batch大于1时，将两个连续的句子作为一个batch，各batch间数据断开$batch\_size-1$的距离，训练时失去了相邻两句话之间的信息传递！！！！！）
    - batchSampler和其他Sampler类都继承的时sampler。更改__iter__()函数，将返回用于确定从dataset中getitem()的*index*列表迭代器。index被用来调用Dataset的__getitem__()获取对应数据。
 
-![pic1](https://s2.ax1x.com/2019/09/20/njKaTg.jpg)
+![pic1](img/IMG_0127.jpg)
 
 ## 1.4 train部分
 
