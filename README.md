@@ -56,7 +56,7 @@ For demands, we are customizing the `DataSet` and `Dataloader` class:
 1. **When customizing a `DataSet`**, we divide the data into sequences with length as 100(or whatever). This can be customized in `__init__()` of `DataSet`
 2. **When customizing `Dataloader`**, we mainly change the sampling method to make the sequence be continuous(but if no batch, `Dataloader` can supply a simple way `sampler=SeqBatchSampler` to make continuous). What we need is to customize `sampler` class's `__iter__()`, doing the sampling like what happened in pic below.It will finally make the training to use continuous data.(This can be found in `SeqSampler.py`)
 
-[![njUBh6.md.jpg](https://s2.ax1x.com/2019/09/20/njUBh6.md.jpg)](https://imgchr.com/i/njUBh6)
+<a href="https://imgchr.com/i/njUBh6"><img src="https://s2.ax1x.com/2019/09/20/njUBh6.jpg" alt="njUBh6.jpg" border="0" /></a>
 
 ## 1.4 Net training part
 
