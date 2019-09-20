@@ -56,15 +56,15 @@ For demands, we are customizing the `DataSet` and `Dataloader` class:
 1. **When customizing a `DataSet`**, we divide the data into sequences with length as 100(or whatever). This can be customized in `__init__()` of `DataSet`
 2. **When customizing `Dataloader`**, we mainly change the sampling method to make the sequence be continuous(but if no batch, `Dataloader` can supply a simple way `sampler=SeqBatchSampler` to make continuous). What we need is to customize `sampler` class's `__iter__()`, doing the sampling like what happened in pic below.It will finally make the training to use continuous data.(This can be found in `SeqSampler.py`)
 
-![pic1](img/IMG_0127.jpg)
+![pic1](https://s2.ax1x.com/2019/09/20/njKaTg.jpg)
 
 ## 1.4 Net training part
 
 Net training consists some techniques:
 
-- Choosing loss function: By choosing a loss function, net can correctly backpropagating.
-- Choosing the gradient optimizer.
-- Choosing file path to save checkpoint and model.
+1. Choosing loss function: By choosing a loss function, net can correctly backpropagating.
+2. Choosing the gradient optimizer.
+3. Choosing file path to save checkpoint and model.
 
 <img src="https://latex.codecogs.com/gif.latex?\text{loss}(x,&space;class)&space;=&space;-\log\left(\frac{\exp(x[class])}{\sum_j&space;\exp(x[j])}\right)&space;=&space;-x[class]&space;&plus;&space;\log\left(\sum_j&space;\exp(x[j])\right)" title="\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right) = -x[class] + \log\left(\sum_j \exp(x[j])\right)" />
 
@@ -122,6 +122,8 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 2. **自定义Sampler对数据抽样**然后根据batch\_size确定如何通过定制采样函数，完成连续抽样和随机抽样。（参考repo：pytorch\_punctuation的代码，它对于batch的采样，几乎等于随机采样。因为当batch大于1时，将两个连续的句子作为一个batch，各batch间数据断开$batch\_size-1$的距离，训练时失去了相邻两句话之间的信息传递！！！！！）
    - batchSampler和其他Sampler类都继承的时sampler。更改__iter__()函数，将返回用于确定从dataset中getitem()的*index*列表迭代器。index被用来调用Dataset的__getitem__()获取对应数据。
 
+![pic1](https://s2.ax1x.com/2019/09/20/njKaTg.jpg)
+
 ## 1.4 train部分
 
 1. 选择损失函数Loss
@@ -130,16 +132,6 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 4. 记录最佳损失Loss
 
 定制train代码，选择mini-batch反向传递策略，还有epoch反向传递更新一次的策略？？？
-
-<img src="https://latex.codecogs.com/gif.latex?\text{loss}(x,&space;class)&space;=&space;-\log\left(\frac{\exp(x[class])}{\sum_j&space;\exp(x[j])}\right)&space;=&space;-x[class]&space;&plus;&space;\log\left(\sum_j&space;\exp(x[j])\right)" title="\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right) = -x[class] + \log\left(\sum_j \exp(x[j])\right)" />
-
-## 1.4 Net training part
-
-Net training consists some techniques:
-
-- Choosing loss function: By choosing a loss function, net can correctly backpropagating.
-- Choosing the gradient optimizer.
-- Choosing file path to save checkpoint and model.
 
 <img src="https://latex.codecogs.com/gif.latex?\text{loss}(x,&space;class)&space;=&space;-\log\left(\frac{\exp(x[class])}{\sum_j&space;\exp(x[j])}\right)&space;=&space;-x[class]&space;&plus;&space;\log\left(\sum_j&space;\exp(x[j])\right)" title="\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right) = -x[class] + \log\left(\sum_j \exp(x[j])\right)" />
 
