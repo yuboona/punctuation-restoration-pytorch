@@ -8,6 +8,12 @@
   1. In windows: execute `start run.bat` in the cmd in this dir.
   2. In linux: execute `run.sh` in bash in this dir.
 
+or
+
+- Run the code
+  1. In windows CMD: execute `python train_use_conf.py > ./log/blstm &`  at root dir of this projct.
+  2. In linux bash: execute `python train_use_conf.py > ./log/blstm &` at root dir of this projct.
+
 ---------------------*en_version*-------------------------
 
 ## Main module

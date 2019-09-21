@@ -29,7 +29,7 @@ class PuncDataset(data.Dataset):
             vocab_path,
             extra_word_list=['<UNK>', '<END>']
         )
-        self.id2word = {v: k for k,v in self.word2id.items()}
+        self.id2word = {v: k for k, v in self.word2id.items()}
         self.punc2id = load_vocab(
             punc_path,
             extra_word_list=[" "]
@@ -80,7 +80,7 @@ class PuncDataset(data.Dataset):
         self.in_len = len(in_id) // 100
         len_tmp = self.in_len * 100
         in_id = in_id[:len_tmp]
-        dt = np.dtype('i8')
+        # dt = np.dtype('i8')
         self.in_id = torch.tensor(np.array(in_id, dtype='i8').reshape(-1, 100))
         label = label[:len_tmp]
         self.label = torch.tensor(np.array(label, dtype='i8').reshape(-1, 100))
@@ -119,7 +119,7 @@ def get_loader(train_path, vocab_path, punc_path, batch_size=1):
     dataset = PuncDataset(train_path, vocab_path, punc_path)
     SeqSampler = SeqBatchSampler(
         dataset.in_len,
-        batch_size=4
+        batch_size=batch_size
         )
     data_loader = data.DataLoader(
         dataset=dataset,

@@ -1,1 +1,1 @@
-python train.py --train_data=./data/train --cv_data=./data/valid --vocab=./data/vocab --punc_vocab=./data/punc_vocab --batch_size=4 --epochs=7 --early_stop --verbose --print_freq=10 --save_folder=./exp/blstm --checkpoint --lr=0.005 > ./log/blstm &
+python train.py --train_data=./data/train --cv_data=./data/valid --vocab=./data/vocab --punc_vocab=./data/punc_vocab --batch_size=10 --epochs=7 --early_stop --verbose --print_freq=10 --save_folder=./exp/blstm --checkpoint --lr=0.005 > ./log/blstm &
