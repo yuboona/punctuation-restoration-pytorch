@@ -12,11 +12,16 @@ from data import get_loader, load_vocab
 from model.Net import LSTMPR
 
 import tools.utils as utils
+from conf import TRAINCONF1 as args
 
 
-parser = argparse.ArgumentParser(description='lstm punctuation prediction training.')
+parser = argparse.ArgumentParser(
+    description="Lstm Punctuation Prediction training.",
+    usage="In windows CMD or linux bash: execute `python train_use_conf.py > ./log/blstm &`  at root dir of this projct."
+    )
 
-# training data path
+
+""" # training data path
 parser.add_argument(
     '--train_data', '-t', default='',
     help='training text data path'
@@ -104,8 +109,7 @@ parser.add_argument(
 parser.add_argument(
     '--model_path', default='final.pth.tar',
     help='Location to save best validation model'
-)
-
+) """
 
 
 def run_one_epoch(
@@ -130,8 +134,6 @@ def run_one_epoch(
     optimizer : Adam
 
     epoch : [type]
-        [description]
-    args : [type]
         [description]
     cross_valid : bool, optional
         [description], by default False
@@ -158,7 +160,7 @@ def run_one_epoch(
             # 3. backward()*********************************************************
             loss.backward()
             # Clip gradient
-            torch.nn.utils.clip_grad_norm(model.parameters(), args.max_norm)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_norm)
             # 4. update************************************************************
             optimizer.step()
 
@@ -328,6 +330,6 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    s = parser.parse_args()
     print(args)
     main(args)
