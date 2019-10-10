@@ -1,10 +1,12 @@
 # Building a Simple LSTM System with Pytorch (Pytorch搭建简单LSTM系统)
 
-- Requirements
+## Requirements
+
   1. python3.6
   2. torch1.0
 
-- Run the code
+## Run the code
+
   1. In windows: execute `start run.bat` in the cmd in this dir.
   2. In linux: execute `run.sh` in bash in this dir.
 
@@ -14,6 +16,12 @@ or
   1. In windows CMD: execute `python train_use_conf.py > ./log/blstm &`  at root dir of this projct.
   2. In linux bash: execute `python train_use_conf.py > ./log/blstm &` at root dir of this projct.
 
+## DataSet
+
+1. Chinese Book *平凡的世界*.
+2. Chinese ancient Poetry. (Differenr word segmentation method makes very different results)
+
+---
 ---------------------*en_version*-------------------------
 
 ## Main module
