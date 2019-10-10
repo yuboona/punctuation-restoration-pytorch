@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import argparse
 import io
 import os
@@ -12,7 +13,7 @@ from data import get_loader, load_vocab
 from model.Net import LSTMPR
 
 import tools.utils as utils
-from conf import TRAINCONF1 as args
+from conf import TRAINCONF3 as args
 
 
 parser = argparse.ArgumentParser(

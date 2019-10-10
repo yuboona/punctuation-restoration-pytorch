@@ -252,7 +252,8 @@ def main(args):
 
     # Create save folder********************************************************
     save_folder = args.save_folder
-    utils.mkdir(save_folder)
+    if not os.path.exists(save_folder):
+        utils.mkdir(save_folder)
 
     prev_val_loss = float('inf')
     best_val_loss = float('inf')

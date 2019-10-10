@@ -1,13 +1,13 @@
 
 # data path
-train_data = './data1/train'
-cv_data = './data1/valid'
-vocab = './data1/vocab'
-punc_vocab = './data1/punc_vocab'
+train_data = './data2/train'
+cv_data = './data2/valid'
+vocab = './data2/vocab'
+punc_vocab = './data2/punc_vocab'
 # train from prev checpoint
 continue_from = ''
 # 保存各个时间点的模型
-save_folder = './exp/PRnet1'
+save_folder = './exp/PRnet2'
 # 是否在各个epoch结束保存检查点
 checkpoint = True
 # batch的尺寸:default=10
@@ -33,4 +33,4 @@ print_freq = 10
 num_class = 6
 # **************************************************************************
 # ######## save and load model##############################################
-model_path = 'final1.pth.tar'
+model_path = 'final2.pth.tar'
