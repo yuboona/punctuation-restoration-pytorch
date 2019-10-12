@@ -13,7 +13,7 @@ from data import get_loader, load_vocab
 from model.Net import LSTMPR
 
 import tools.utils as utils
-from conf import TRAINCONF3 as args
+from conf import TRAINCONF4 as args
 
 
 parser = argparse.ArgumentParser(
