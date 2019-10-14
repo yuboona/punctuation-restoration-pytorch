@@ -1,4 +1,6 @@
-
+"""
+data_modern_pku
+"""
 # data path
 train_data = './data/train'
 cv_data = './data/valid'

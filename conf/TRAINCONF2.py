@@ -1,4 +1,5 @@
-
+"""data_old_pkuseg
+"""
 # data path
 train_data = './data2/train'
 cv_data = './data2/valid'
