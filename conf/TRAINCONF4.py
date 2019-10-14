@@ -1,4 +1,5 @@
-
+"""data_old_one_characters
+"""
 # data path
 train_data = './data4/train'
 cv_data = './data4/valid'
