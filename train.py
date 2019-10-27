@@ -8,10 +8,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from data import get_loader, load_vocab
+from tool.data import get_loader, load_vocab
 from model.Net import LSTMPR
 
-import tools.utils as utils
+import tool.utils as utils
 
 
 parser = argparse.ArgumentParser(description='lstm punctuation prediction training.')

@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.utils.data as data
 import os
-from SeqSampler import SeqBatchSampler
+from tool.SeqSampler import SeqBatchSampler
 
 """Dataset 和 Dataloader是torch中的一套工具，
 继承并改造Dataset将数据进行必要的格式化，则Dataloader

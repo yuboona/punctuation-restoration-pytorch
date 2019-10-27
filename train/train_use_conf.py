@@ -9,10 +9,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from data import get_loader, load_vocab
+from tool.data import get_loader, load_vocab
 from model.Net import LSTMPR
 
-import tools.utils as utils
+import tool.utils as utils
 from conf import TRAINCONF as args
 
 
@@ -223,8 +223,8 @@ def main(args):
     # Model*****************************************************************************
     model = LSTMPR(
         vocab_size=vocab_len,
-        embedding_size=200,
-        hidden_size=200,
+        embedding_size=100,
+        hidden_size=100,
         num_layers=1,
         num_class=num_class
     )

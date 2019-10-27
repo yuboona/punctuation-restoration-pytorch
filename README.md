@@ -1,11 +1,11 @@
 # Building a Simple LSTM System with Pytorch (Pytorch搭建简单LSTM系统)
 
-## *Requirements
+## * Requirements
 
 1. python3.6
 2. torch1.0
 
-## *Run the code
+## * Run the code
 
 1. In windows: execute `start run.bat` in the cmd in this dir.
 2. In linux: execute `./run.sh` in bash in this dir. (your needs `chmod` to give `execute right`)
@@ -15,7 +15,7 @@
 1. In windows CMD: execute `python train_use_conf.py > ./log/yourLOgName &`  at root dir of this projct.
 2. In linux bash: execute `python train_use_conf.py > ./log/yourLogName &` at root dir of this projct.
 
-## *DataSet
+## * DataSet
 
 1. Chinese Book *平凡的世界*.
 2. Chinese ancient Poetry. (Different word segmentation method makes very different result)
@@ -118,24 +118,29 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 
 ### 1.1 数据预处理模块
 
-预处理：
+预处理:
+
+- 去除无关文字、标题
+- 去除无关符号
 
 ### 1.2 数据输入模块
 
-数据再输入网络时，需要被组织成相对于pytorch来说规范的数据格式，pytorch提供了Dataset模块对于数据进行打包、提供了Dataloader对打包好的数据进行加载使用。
+数据输入网络时，需要被组织成相对于pytorch来说规范的数据格式，pytorch提供了Dataset模块对于数据进行打包、提供了Dataloader对打包好的数据进行加载使用。
 
-我们事实上对LSTM模型的输入会有如下需求：
+- 针对LSTM（数据前后强依赖）模型的输入会有如下需求：
+  1. **确定序列长度**:LSTM的输入是一个词序列，我们需要确定一次序列的长度
+  2. **确定batch划分**:为加速训练效率，DNN网络的输入通常以batch进行训练，同一神经单元同时对batch上的所有单个数据进行处理。数据输入的shape(batch_size, 序列长度)，最后网络输出的是batch_size个结果。不同于一般DNN的数据集batch随机划分，针对于处理序列数据的LSTM，各个batch间需要保持数据连续性（batch内部），只有这样batch间才能传递文本的连续信息。
 
-- **确定序列长度**:LSTM的输入是一个词序列，我们需要确定一次序列的长度
-- **确定batch划分**:DNN网络的输入通常是一个batch进行训练，输入的shape(batch_size, 序列长度)，最后网络输出的是batch_size个结果。一般DNN的数据集batch随即划分即可，但对于处理序列数据的LSTM，有各个batch间保持数据连续性的连续采样需求，这样训练时可以在各个batch间传递更多连续的信息。
-
-通过对于Dataset,Dataloader进行定制，我们可以满足对数据的需求：
-
-1. **自定义Dataset类的数据初始**要确定好输入数据的句子序列长度，假设想变为100，通过定制__init__()函数，可以定制数据从文件读取后地形状，改为(-1, 100)
-2. **自定义Sampler对数据抽样**然后根据batch\_size确定如何通过定制采样函数，完成连续抽样和随机抽样。（参考repo：pytorch\_punctuation的代码，它对于batch的采样，几乎等于随机采样。因为当batch大于1时，将两个连续的句子作为一个batch，各batch间数据断开$batch\_size-1$的距离，训练时失去了相邻两句话之间的信息传递！！！！！）
-   - batchSampler和其他Sampler类都继承的时sampler。更改__iter__()函数，将返回用于确定从dataset中getitem()的*index*列表迭代器。index被用来调用Dataset的__getitem__()获取对应数据。
+- 通过对于Dataset，Dataloader进行定制，我们可以满足对数据的需求：
+  1. **自定义Dataset类的数据初始**要确定好输入数据的句子序列长度，假设想变为100，通过定制__init__()函数，可以定制数据从文件读取后地形状，改为(-1, 100)
+  2. **自定义Sampler对数据抽样**然后根据batch\_size确定如何通过定制采样函数，完成连续抽样和随机抽样。（参考repo：pytorch\_punctuation的代码，它对于batch的采样，几乎等于随机采样。因为当batch大于1时，将两个连续的句子作为一个batch，各batch间数据断开$batch\_size-1$的距离，训练时失去了相邻两句话之间的信息传递！！！！！）
+     - batchSampler和其他Sampler类都继承了sampler类。更改__iter__()函数，将返回用于确定从dataset中getitem()的*index*列表迭代器。index被用来调用Dataset的__getitem__()获取对应数据。
 
 ![pic1](img/IMG_0127.jpg)
+
+## 1.3 网络模型搭建
+
+
 
 ## 1.4 train部分
 
@@ -147,6 +152,11 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 定制train代码，选择mini-batch反向传递策略，还有epoch反向传递更新一次的策略？？？
 
 <img src="https://latex.codecogs.com/gif.latex?\text{loss}(x,&space;class)&space;=&space;-\log\left(\frac{\exp(x[class])}{\sum_j&space;\exp(x[j])}\right)&space;=&space;-x[class]&space;&plus;&space;\log\left(\sum_j&space;\exp(x[j])\right)" title="\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right) = -x[class] + \log\left(\sum_j \exp(x[j])\right)" />
+
+
+## 2. 测试模块
+
+
 
 ## 画图
 

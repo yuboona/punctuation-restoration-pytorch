@@ -4,6 +4,7 @@ data_modern_pku
 # data path
 train_data = './data/train'
 cv_data = './data/valid'
+test_data = './data/test'
 vocab = './data/vocab'
 punc_vocab = './data/punc_vocab'
 # train from prev checpoint
@@ -36,3 +37,6 @@ num_class = 3
 # **************************************************************************
 # ######## save and load model##############################################
 model_path = 'final.pth.tar'
+# **************************************************************************
+# ######## output puctuated test############################################
+output = './out/out'
