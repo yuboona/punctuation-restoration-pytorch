@@ -1,19 +1,16 @@
 # -*- coding:utf-8 -*-
 import argparse
-import io
 import os
-import sys
 import time
 
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from tool.data import get_loader, load_vocab
 from model.Net import LSTMPR
 
+from tool.dataset import get_loader, load_vocab
 import tool.utils as utils
-from conf import TRAINCONF as args
 
 
 parser = argparse.ArgumentParser(
@@ -22,106 +19,15 @@ parser = argparse.ArgumentParser(
     )
 
 
-""" # training data path
-parser.add_argument(
-    '--train_data', '-t', default='',
-    help='training text data path'
-)
-# check&validation data path
-parser.add_argument(
-    '--cv_data', '-c', default='',
-    help='cross validation text data path'
-)
-# vocab data path
-parser.add_argument(
-    '--vocab', '-v', default='',
-    help='training text data path'
-)
-# punc_vocab data path
-parser.add_argument(
-    '--punc_vocab', '-p', default='',
-    help='training text data path'
-)
-# continue from
-parser.add_argument(
-    '--continue_from', '-cf', default='',
-    help='continue from checkpoint model'
-)
-# ######## save and load model
-parser.add_argument(
-    '--save_folder', '-s', default='./tmp',
-    help='location to save epoch model'
-)
-parser.add_argument(
-    '--checkpoint', dest='checkpoint', action='store_true',
-    help='Enables checkpoint saving of model'
-)
-# ######## training hyper param
-# batch_size
-parser.add_argument(
-    '--batch_size', '-b', default=10, type=int,
-    help='training text data path'
-)
-# L2
-parser.add_argument(
-    '--L2', '-l', default=0, type=float,
-    help='L2 regularization'
-)
-# tell me epoch size
-parser.add_argument(
-    '--epochs', '-e', default=32, type=int,
-    help='Number of training epochs'
-)
-# set the max_norm for clip the gradient, prevent gradient explosion
-parser.add_argument(
-    '--max_norm', '-m', default=250, type=int,
-    help='Norm cutoff to prevent explosion of gradients'
-)
-# eraly stop
-parser.add_argument(
-    '--early_stop', '-es', dest='early_stop', action='store_true',
-    help='Early stop training when get small improvement'
-)
-# learning rate
-parser.add_argument(
-    '--lr', '--learning-rate', default=1e-2, type=float,
-    help='Initial learning rate (now only support Adam)'
-)
-
-# ******************************************************************************
-
-# logging
-parser.add_argument(
-    '--verbose', '-vb', dest='verbose', action='store_true',
-    help='Watching training process'
-)
-parser.add_argument(
-    '--print_freq', '-pf', default=1000, type=int,
-    help='Frequency of printing training infomation'
-)
-
-# ######## model hyper parameter
-parser.add_argument(
-    '--num_class', default=3, type=int,
-    help='Number of output classes. (Include blank space " ")'
-)
-# ******************************************************************************
-# ######## save and load model
-parser.add_argument(
-    '--model_path', default='final.pth.tar',
-    help='Location to save best validation model'
-) """
-
-
 def run_one_epoch(
-    data_loader,
-    model,
-    criterion,
-    optimizer,
-    epoch,
-    args,
-    cross_valid=False
-):
+                    data_loader,
+                    model,
+                    criterion,
+                    optimizer,
+                    epoch,
+                    args,
+                    cross_valid=False
+                    ):
     """Def the Func to train a epoch's data
 
     Parameters
@@ -328,9 +234,3 @@ def main(args):
                 LSTMPR.serialize(model, optimizer, epoch+1),
                 file_path)
             print("Find better validated model, saving to %s" % file_path)
-
-
-if __name__ == "__main__":
-    s = parser.parse_args()
-    print(args)
-    main(args)
