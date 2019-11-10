@@ -1,5 +1,11 @@
 # Building a Simple LSTM System with Pytorch (Pytorch搭建简单LSTM系统)
 
+## Related Work
+
+[[1]Better Punctuation Prediction with Dynamic Conditional Random Fields](https://www.aclweb.org/anthology/D10-1018/)
+[]
+
+
 ## * Requirements
 
 1. python3.6
