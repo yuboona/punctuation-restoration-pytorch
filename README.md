@@ -1,10 +1,18 @@
-# Building a Simple LSTM System with Pytorch (Pytorch搭建简单LSTM系统)
+# Building a Simple LSTM System(Punctuation Restoration System) with Pytorch (Pytorch搭建简单LSTM标点恢复系统)
 
-## Related Work
+## Related Paper
 
-[[1]Better Punctuation Prediction with Dynamic Conditional Random Fields](https://www.aclweb.org/anthology/D10-1018/)
-[]
+[[1]LSTM for Punctuation Restoration in Speech Transcripts](https://phon.ioc.ee/dokuwiki/lib/exe/fetch.php?media=people:tanel:interspeech2015-paper-punct.pdf)
 
+```latex
+     @inproceedings{tilk2015,
+     author    = {Ottokar Tilk and Tanel Alum{\"a}e},
+     title     = {{LSTM} for Punctuation Restoration in Speech Transcripts},
+     booktitle = {Interspeech 2015},
+     year      = {2015},
+     address   = {Dresden, Germany}
+     }
+```
 
 ## * Requirements
 
