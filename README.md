@@ -12,8 +12,8 @@
 
 > or
 
-1. In windows CMD: execute `python train_use_conf.py > ./log/yourLOgName &`  at root dir of this projct.
-2. In linux bash: execute `python train_use_conf.py > ./log/yourLogName &` at root dir of this projct.
+~~1. In windows CMD: execute `python punctuator.py > ./log/yourLOgName &`  at root dir of this projct.
+2. In linux bash: execute `python punctuator.py > ./log/yourLogName &` at root dir of this projct.~~
 
 ## * DataSet
 

@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from tool.data import get_loader, load_vocab
+from tool.dataset import get_loader, load_vocab
 from model.Net import LSTMPR
 
 import tool.utils as utils

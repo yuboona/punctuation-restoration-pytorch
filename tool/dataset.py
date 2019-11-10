@@ -88,6 +88,19 @@ class PuncDataset(data.Dataset):
         # print('len: ', self.in_len)
 
 
+class NoPuncTextDataset(object):
+    """parse text without punctuation
+       - used by Inference.py
+    Parameters
+    ----------
+    object : Inherited
+        basic object.
+    """
+
+    def __init__(self, train_path, vocab_path, punc_path):
+
+
+
 def collate_fn(data):
     input_seqs, label_seqs = zip(*data)
 
