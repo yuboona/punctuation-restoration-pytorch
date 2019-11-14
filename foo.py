@@ -3,7 +3,7 @@ import numpy as np
 import torch.utils.data as data
 import data as data_class
 from torch.utils.data.sampler import Sampler, RandomSampler, SequentialSampler, BatchSampler
-from SeqSampler import SeqBatchSampler
+from tool.SeqSampler import SeqBatchSampler
 
 
 class TxtDataset(data.Dataset):  # 这是一个Dataset子类
@@ -118,8 +118,7 @@ if __name__ == "__main__":
     # for m, (i, j) in enumerate(loader):
     #     print()
 
-    print(
-            "sdsda"
-            "asdadsad"
-            "asdasdasd"
-            )
+a = [1, 2, 3, 4]
+a = a[:5]
+
+print(a)

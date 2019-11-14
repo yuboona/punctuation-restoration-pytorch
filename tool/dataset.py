@@ -7,16 +7,20 @@ from tool.SeqSampler import SeqBatchSampler
 """Dataset 和 Dataloader是torch中的一套工具，
 继承并改造Dataset将数据进行必要的格式化，则Dataloader
 才能用于从Dataset中load数据
+
+Dataset and Dataloader are essential part of pytorch.
+Inherited from them, modified for own needs. Then you can
+get data tools fitting your project.
 """
 
 
 class PuncDataset(data.Dataset):
-    """处理带标点的数据源
+    """Representing a Dataset
 
     superclass
     ----------
     data.Dataset :
-        Dataset 是一个抽象类，用来表示数据集
+        Dataset is a abstract class, representing the real data.
     """
     def __init__(self, train_path, vocab_path, punc_path):
         # 检查文件是否存在
@@ -42,7 +46,7 @@ class PuncDataset(data.Dataset):
         self.preprocess(self.txt_seqs)
 
     def __len__(self):
-        """return txt文件中的句子数目
+        """return the sentence nums in .txt
         """
         return self.in_len
 
@@ -54,7 +58,7 @@ class PuncDataset(data.Dataset):
         index : int
             索引
         """
-        return self.in_id[index], self.label[index]
+        return self.input_data[index], self.label[index]
 
     def preprocess(self, txt_seqs: list):
         """将文本转为单词和应预测标点的id pair
@@ -63,28 +67,29 @@ class PuncDataset(data.Dataset):
         txt : 文本
             文本每个单词跟随一个空格，符号也跟一个空格
         """
-        in_id = []
+        input_data = []
         label = []
         punc = " "
         for token in txt_seqs:
             if token in self.punc2id:
                 punc = token
             else:
-                in_id.append(self.word2id.get(token, self.word2id["<UNK>"]))
+                input_data.append(self.word2id.get(token, self.word2id["<UNK>"]))
                 label.append(self.punc2id[punc])
                 # 这个设计使得标点符号的下一个单词的label是标点符号，将符号两侧的知识加入到了网络中
                 punc = " "
-        in_id.append(self.word2id['<END>'])
-        label.append(self.punc2id[punc])
 
-        self.in_len = len(in_id) // 100
-        len_tmp = self.in_len * 100
-        in_id = in_id[:len_tmp]
-        # dt = np.dtype('i8')
-        self.in_id = torch.tensor(np.array(in_id, dtype='i8').reshape(-1, 100))
+        # code below is for using 100 as a hidden size
+        self.in_len = len(input_data) // 100
+        len_tmp = self.in_len * 100 - 1
+        input_data = input_data[:len_tmp]
         label = label[:len_tmp]
+        input_data.append(self.word2id['<END>'])
+        label.append(self.punc2id[punc])
+        # dt = np.dtype('i8')
+        self.input_data = torch.tensor(np.array(input_data, dtype='i8').reshape(-1, 100))
         self.label = torch.tensor(np.array(label, dtype='i8').reshape(-1, 100))
-        # print('last: ', self.in_id[-1])
+        # print('last: ', self.input_data[-1])
         # print('len: ', self.in_len)
 
 
@@ -97,8 +102,75 @@ class NoPuncTextDataset(object):
         basic object.
     """
 
-    def __init__(self, train_path, vocab_path, punc_path):
+    def __init__(self, txt_path, vocab_path, punc_path):
+        """[summary]
 
+        Parameters
+        ----------
+        txt_path : str
+            文本路径
+        vocab_path : str
+            字典路径
+        punc_path : str
+            标点文件路径
+        """
+        # 检查文件是否存在
+        print(txt_path)
+        assert os.path.exists(txt_path), "train文件不存在"
+        assert os.path.exists(vocab_path), "词典文件不存在"
+        assert os.path.exists(punc_path), "标点文件不存在"
+
+        self.word2id = load_vocab(
+            vocab_path,
+            extra_word_list=['<UNK>', '<END>']
+        )
+        # for validation of dataset, can be annotated for speedup
+        self.id2word = {v: k for k, v in self.word2id.items()}
+        self.punc2id = load_vocab(
+            punc_path,
+            extra_word_list=[" "]
+        )
+        self.id2punc = {k: v for (v, k) in self.punc2id.items()}
+
+        tmp_seqs = open(txt_path, encoding='utf-8').readlines()
+        self.txt_seqs = [i for seq in tmp_seqs for i in seq.split()]
+        # print(self.txt_seqs[:10])
+        self.preprocess(self.txt_seqs)
+
+    def __len__(self):
+        """return txt文件中的句子数目
+        """
+        return self.in_len
+
+    def __getitem__(self, index):
+        """返回指定索引的张量对 (输入文本id的序列 , 其对应的标点id序列)
+
+        Parameters
+        ----------
+        index : int
+            索引
+        """
+        return self.input_data[index], self.txt_seqs[index]
+
+    def preprocess(self, txt_seqs: list):
+        """Transform the word in .txt to be word_dict_id.
+
+        Parameters
+        ----------
+        txt_seqs : list
+            The word in txt, one by one splited with a whitespace.
+        """
+        input_data = []
+        for token in txt_seqs:
+            input_data.append(self.word2id.get(token, self.word2id["<UNK>"]))
+        # code below is for using 100 as a hidden size
+        self.in_len = len(input_data) // 100
+        len_tmp = self.in_len * 100
+        input_data = input_data[:len_tmp]
+        txt_seqs = txt_seqs[:len_tmp]
+
+        self.input_data = torch.tensor(np.array(input_data, dtype='i8').reshape(-1, 100))
+        self.txt_seqs = np.array(txt_seqs).reshape(-1, 100)
 
 
 def collate_fn(data):
