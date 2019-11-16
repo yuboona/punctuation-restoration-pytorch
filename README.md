@@ -1,6 +1,6 @@
 # Building a Simple LSTM System(Punctuation Restoration System) with Pytorch (Pytorch搭建简单LSTM标点恢复系统)
 
-## Related Paper
+## * Related Paper
 
 [[1]LSTM for Punctuation Restoration in Speech Transcripts](https://phon.ioc.ee/dokuwiki/lib/exe/fetch.php?media=people:tanel:interspeech2015-paper-punct.pdf)
 
@@ -14,48 +14,58 @@
      }
 ```
 
+## * Graph
+
+- viznet
+- visio
+- Goodnote
+
 ## * Requirements
 
 1. python3.6
-2. torch1.0
+2. pytorch1.0
 
 ## * Run the code
 
-1. In windows: execute `start run.bat` in the cmd in this dir.
-2. In linux: execute `./run.sh` in bash in this dir. (your needs `chmod` to give `execute right`)
+- Training
+  1. In windows: execute `start run.bat` in the cmd in this dir.
+  2. In linux: execute `./run.sh` in bash in this dir. (your needs `chmod` to give `execute right`)
+  > or
+  1. In windows CMD: execute `python punctuator.py -tr > ./log/yourLOgName &`  at root dir of this projct.
+  2. In linux bash: execute `python punctuator.py -tr > ./log/yourLogName &` at root dir of this projct.
+- Inference
+  1. In windows CMD: execute `python punctuator.py -t > ./log/yourLOgName &`  at root dir of this projct.
+  2. In linux bash: execute `python punctuator.py -t > ./log/yourLogName &` at root dir of this projct.
 
-> or
-
-~~1. In windows CMD: execute `python punctuator.py > ./log/yourLOgName &`  at root dir of this projct.
-2. In linux bash: execute `python punctuator.py > ./log/yourLogName &` at root dir of this projct.~~
 
 ## * DataSet
 
-1. Chinese Book *平凡的世界*.
+1. Chinese Book *《平凡的世界》*.
 2. Chinese ancient Poetry. (Different word segmentation method makes very different result)
 
 ---
+
 ---------------------*en_version*-------------------------
 
-## Main module
+## *Main module*
 
 In general, a DNN system is built with the help of framework like tensorflow, pytorch or MXnet. I choose pytorch for it's simplicity.
 
 Most of DNN systems have 2 main module:
 
 - Training module
-- Test module
+- Inference module
 
 ## 1. Training module
 
 As below, a Training module consists 4 parts:
 
-1. data processing part
-2. data inputing part
-3. net structure building part
-4. net training part
+1. **data processing part**
+2. **data inputing part**
+3. **net structure building part**
+4. **net training part**
 
-Among all of 4 parts, we can do the net structue building later, because we can build it easily in some general pattern.
+Among all of 4 parts, we can build Net structue later, because we can build it easily in some general pattern.
 
 As a beginner, we should concentrate more on data processing and data inputing part. Modern machine algorithm is useless without data. No data, No Magic.
 
@@ -65,23 +75,26 @@ Make a assumption:
 - **Data was changed by accident**: Sorry, our training has gone far away from truth.
 - **We can't transform data to the form what we need**(trust me, there's such kind of needs): Sorry, we also can't start our training.
 
-Always ba careful about your data. There's no Out of the box data for your own needs.
+Always be careful about your data. There's no Out of the box data for your own needs.
 
 ## 1.1 data processing part
 
+Pocessing:
+
+- Remove inrelative word.
+- Remove inrelative symbol.
+
 ## 1.2 data inputing part
 
-When input data to the Net, pytorch demands more uniformed data form. Pytorch supply a `DataSet` class for pack the data from raw. A `Dataloader` is supplied for customize the sampling of dataset.
+When input data to the Net, pytorch demands more uniformed data form. Pytorch supply a `DataSet` class for pack the data from raw. A `Dataloader` is supplied for customizing the sampling of dataset.
 
-It's all for the follow needs:
+- Above is all for the follow needs:
+  1. Determining input sequence length: LSTM require a input sequence. it process a long sequence data and make use of the relation between continuous words.
+  2. Determining batch division: DNN use **batch** to speed up the training. A batch is several sequences data stacked into a matrix, so DNN can output several results once. **But there is problem in LSTM, We more need 2 sequences which are processed continuously to be continuous in data. In this way the relation can be transmit to more later LSTM process.**
 
-- determining input sequence length: LSTM require a input sequence. it process a long sequence data and make use of the relation between continuous words.
-- determining batch division: DNN use **batch** to speed up the training. A batch is several sequences data stacked into a matrix, so DNN can output several results once. **But there is problem in LSTM, We more need 2 sequences which are processed continuously to be continuous in data. In this way the relation can be transmit to more later LSTM process.**
-
-For demands, we are customizing the `DataSet` and `Dataloader` class:
-
-1. **When customizing a `DataSet`**, we divide the data into sequences with length as 100(or whatever). This can be customized in `__init__()` of `DataSet`
-2. **When customizing `Dataloader`**, we mainly change the sampling method to make the sequence be continuous(but if no batch, `Dataloader` can supply a simple way `sampler=SeqBatchSampler` to make continuous). What we need is to customize `sampler` class's `__iter__()`, doing the sampling like what happened in pic below.It will finally make the training to use continuous data.(This can be found in `SeqSampler.py`)
+- For demands above, we are customizing the `DataSet` and `Dataloader` class:
+  1. **When customizing a `DataSet`**, we divide the data into sequences with length as 100(or whatever). This can be customized in `__init__()` of `DataSet`
+  2. **When customizing `Dataloader`**, we mainly change the sampling method to make the sequence be continuous(but if no batch, `Dataloader` can supply a simple way `sampler=SeqBatchSampler` to make continuous). What we need is to customize `sampler` class's `__iter__()`, doing the sampling like what happened in pic below.It will finally make the training to use continuous data.(This can be found in `SeqSampler.py`)
 
 ![pic1](img/IMG_0127.jpg)
 
@@ -95,9 +108,40 @@ Net training consists some techniques:
 
 <img src="https://latex.codecogs.com/gif.latex?\text{loss}(x,&space;class)&space;=&space;-\log\left(\frac{\exp(x[class])}{\sum_j&space;\exp(x[j])}\right)&space;=&space;-x[class]&space;&plus;&space;\log\left(\sum_j&space;\exp(x[j])\right)" title="\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right) = -x[class] + \log\left(\sum_j \exp(x[j])\right)" />
 
----
 
----------------------*zh_version*-------------------------
+## 2. Inference Module
+
+A inference module should consist of 4 parts:
+
+1. Data processing
+2. Data Loader
+3. Model Loading
+4. Inference with loaded Model
+
+### 2.1 Data processing
+
+Methods are identical to [section 1.1](#11-data-processing-part).
+
+### 2.2 Data Loader
+
+- Data inputing needs inheriting the `Dataset` class. Then modifying it to standardizing the data from [section 2.1](#21-data-processing).
+- After `Dataset`'s processing about raw data, we let a sequence unit be the input of Net.
+
+**Note**: Unlike training a Net, now we just input only 1 seq into the Net instead of a batch_size of seqs. But pytorch forces you to indicate the batch_size of the only 1 seq explicitly. Please Use `np.reshape(id_seq, (1, -1))`. **More details are in file `./inference/inference.py`.**
+
+### 2.3 Model Loading
+
+Loading a model can be done by using a overloaded class method `load_model()` of `nn.module`.
+
+- After using `torch.load` to load the model information.
+- We `load_model` the extraction of embedding_size, hidden_size, num_layers, num_class and state_dict.
+
+### 2.4 Inference with loaded Model
+
+Inputing the `Dataset` to the loaded model. Then inference start.
+
+
+-----------------------------------------*zh_version*-------------------------
 
 ## 主要模块
 
@@ -106,7 +150,7 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 通常DNN系统包括两个大部分：
 
 - 训练模块
-- 测试（预测）模块
+- 推理模块
 
 ## 1. 训练模块搭建
 
@@ -155,7 +199,6 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 ## 1.3 网络模型搭建
 
 
-
 ## 1.4 train部分
 
 1. 选择损失函数Loss
@@ -167,12 +210,34 @@ DNN系统的简单搭建需要依赖深度学习框架进行，pytorch是一个�
 
 <img src="https://latex.codecogs.com/gif.latex?\text{loss}(x,&space;class)&space;=&space;-\log\left(\frac{\exp(x[class])}{\sum_j&space;\exp(x[j])}\right)&space;=&space;-x[class]&space;&plus;&space;\log\left(\sum_j&space;\exp(x[j])\right)" title="\text{loss}(x, class) = -\log\left(\frac{\exp(x[class])}{\sum_j \exp(x[j])}\right) = -x[class] + \log\left(\sum_j \exp(x[j])\right)" />
 
+## 2. 推理模块搭建
 
-## 2. 测试模块
+一个DNN模型的推理模块应当包括几个部分：
 
+1. 数据预处理模块
+2. 数据输入模块
+3. 载入网络模型
+4. 使用网络模型对输入数据进行推理
 
+### 2.1 数据预处理模块
 
-## 画图
+数据预处理模块和[section 1.1](#11-数据预处理模块)中的过程相同。
 
-- viznet
-- visio
+### 2.2 数据输入模块
+
+- 数据输入pytorch网络，需要继承`Dataset`类并进行改造后，对预处理好的数据进行规范化。
+
+- 通过类似[section1.2](#12-数据输入模块)的`Dataset`构造方式，我们可以得到标准化的数据集，再将标准化的数据集一个一个序列地送进网络。
+
+**需要注意的是**：和训练网络时不同，我们一次只推理一个单元的文字。在从`Dataset`取出一个序列后，需要`np.reshape(id_seq, (1, -1))`将序列改为batch_size为1的shape。
+
+### 2.3 载入网络模型
+
+网络模型的载入，是通过重载`nn.module`自身的类方法`load_model`实现的。
+
+- 使用`torch.load`载入保存好的model后，
+- 提取vocab_size、embedding_size、hidden_size、num_layers、num_class、state_dict等参数，恢复模型。
+
+### 2.4 使用网络模型对输入数据进行推理
+
+将数据输入由[section 2.3](#23-载入网络模型)得到的网络模型，可以进行推理

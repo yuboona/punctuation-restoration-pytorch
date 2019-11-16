@@ -221,6 +221,7 @@ def main(args):
     model = LSTMPR(
         vocab_size=vocab_len,
         embedding_size=100,
+        # hidden_size is highly related to dataset class split
         hidden_size=100,
         num_layers=1,
         num_class=num_class
