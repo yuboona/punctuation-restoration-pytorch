@@ -1,10 +1,12 @@
-"""data_modern_one_character
+"""
+data_modern_one_character
 """
 # data path
-train_data = './data5/train'
-cv_data = './data5/valid'
+txt_data = './data5/test'
 vocab = './data5/vocab'
 punc_vocab = './data5/punc_vocab'
+# cuda()
+cuda = False
 # train from prev checpoint
 continue_from = ''
 # 保存各个时间点的模型
@@ -34,4 +36,7 @@ print_freq = 10
 num_class = 3
 # **************************************************************************
 # ######## save and load model##############################################
-model_path = 'final5.pth.tar'
+model_path = './exp/PRnet5/final5.pth.tar'
+# **************************************************************************
+# ######## output puctuated test############################################
+output = './out/out_data5'

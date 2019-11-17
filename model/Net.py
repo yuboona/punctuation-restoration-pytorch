@@ -15,14 +15,18 @@ class LSTMPR(nn.Module):
                  num_class):
         super(LSTMPR, self).__init__()
         # hyper parameters
+        self.vocab_size = vocab_size
+        self.embedding_size = embedding_size
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.num_class = num_class
 
         # 网络中的层
         self.embedding = nn.Embedding(vocab_size, embedding_size)
+        # print(hidden_size)
+        # print(embedding_size)
         self.lstm = nn.LSTM(embedding_size, hidden_size, num_layers, batch_first=True)
-        # 因为不是双向网络，所以LSTM的输出的大小是hidden_size而不是hidden_size*2
+        # Here is a one direction LSTM. If bidirection LSTM, (hidden_size*2(,))
         # self.fc = nn.Linear(hidden_size*2, num_class)
         self.fc = nn.Linear(hidden_size, num_class)
         self.init_weights()
@@ -44,27 +48,52 @@ class LSTMPR(nn.Module):
     def init_hidden(self, batch_size):
         h = Variable(torch.zeros(self.num_layers*1, batch_size, self.hidden_size))
         c = Variable(torch.zeros(self.num_layers*1, batch_size, self.hidden_size))
-        # h表示隐藏层的保存空间，c是细胞状态的保存空间
-        return h, c
+        # h for storing hidden layer weight，c for storing cell states
+        return (h, c)
 
-    def forward(self, inputs):
-        """前向传递过程
+    def reset_hidden(self, hidden):
+        h = Variable(hidden[0].data)
+        c = Variable(hidden[1].data)
+        hidden = (h, c)
+        return hidden
+
+    def forward(self, inputs, hidden, train=False):
+        """The forward process of Net
 
         Parameters
         ----------
         inputs : tensor
-            训练数据，padded补齐了的输入，批优先
+            Training data, batch first
         """
-        hidden = self.init_hidden(inputs.size(0))
+        # Inherit the knowledge of context
+        if train:
+            hidden = self.reset_hidden(hidden)
+        # hidden = self.init_hidden(inputs.size(0))
+        # print('input_size',inputs.size())
         embedding = self.embedding(inputs)
-
-        # embedding本身是同样长度的，用这个函数主要是为了用pack
+        # print('embedding_size', embedding.size())
         # packed = pack_sequence(embedding, inputs_lengths, batch_first=True)
+        # embedding本身是同样长度的，用这个函数主要是为了用pack
+        # *****************************************************************************
         outputs, hidden = self.lstm(embedding, hidden)      # 输入pack，lstm默认输出pack
         outputs = outputs.contiguous()
-        print(outputs.size())
+        # print(outputs.size())
         score = self.fc(outputs.view(outputs.size(0)*outputs.size(1), outputs.size(2)))
-        return score.view(outputs.size(0), outputs.size(1), score.size(1))
+        return score.view(outputs.size(0), outputs.size(1), score.size(1)), hidden
+
+    @classmethod
+    def load_model(cls, path, cuda=True):
+        package = torch.load(path, map_location=lambda storage, loc: storage)
+        model = cls(vocab_size=package['vocab_size'],
+                    embedding_size=package['embedding_size'],
+                    hidden_size=package['hidden_size'],
+                    num_layers=package['num_layers'],
+                    num_class=package['num_class'])
+        model.load_state_dict(package['state_dict'])
+        if cuda:
+            model.cuda()
+        return model
+
 
     @staticmethod
     def serialize(model, optimizer, epoch):
@@ -80,8 +109,12 @@ class LSTMPR(nn.Module):
             迭代轮数
         """
         package = {
-                    'state_dict': model.state_dict(),
-                    'optim_dict': optimizer.state_dict(),
-                    'epoch': epoch
-                    }
+            'vocab_size': model.vocab_size,
+            'embedding_size': model.embedding_size,
+            'hidden_size': model.hidden_size,
+            'num_layers': model.num_layers,
+            'num_class': model.num_class,
+            'state_dict': model.state_dict(),
+            'optim_dict': optimizer.state_dict(),
+            'epoch': epoch}
         return package

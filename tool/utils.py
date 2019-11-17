@@ -52,6 +52,6 @@ def add_punc_to_txt(txt_seq: list, predict: list, id2punc: dict):
     for i, word in enumerate(txt_seq):
         punc = id2punc[predict[i]]
         txt_predict += word if punc == ' ' else punc + word
-    punc = id2punc[predict[i+1]]
+    # punc = id2punc[predict[i+1]]
     txt_predict += punc
     return txt_predict

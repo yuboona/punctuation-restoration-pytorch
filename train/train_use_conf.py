@@ -48,6 +48,8 @@ def run_one_epoch(
     total_loss = 0.0
     total_acc = 0.0
     total_words = 0
+    hidden = model.init_hidden(args.batch_size)
+    # print("hidden_size:", hidden[0].size())
     start = time.time()
     for i, (inputs, labels) in enumerate(data_loader):
         # 1. mini_batch data******************************************************
@@ -57,7 +59,8 @@ def run_one_epoch(
         # 2. forward and compute loss**********************************************
         optimizer.zero_grad()
         # forward compute, use *model()* call the forward()
-        scores = model(inputs)
+        print('', hidden[0].size())
+        scores, hidden = model(inputs, hidden, train=True)
         scores = scores.view(-1, args.num_class)
         # criterion() receive a 1.train out and a 2.labels to compute the CrossEntropy
         # it has combined nn.LogSoftmax to compute probability
@@ -129,7 +132,7 @@ def main(args):
     # Model*****************************************************************************
     model = LSTMPR(
         vocab_size=vocab_len,
-        embedding_size=100,
+        embedding_size=200,
         hidden_size=100,
         num_layers=1,
         num_class=num_class

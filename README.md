@@ -140,7 +140,7 @@ Loading a model can be done by using a overloaded class method `load_model()` of
 
 Inputing the `Dataset` to the loaded model. Then inference start.
 
-
+---
 -----------------------------------------*zh_version*-------------------------
 
 ## 主要模块

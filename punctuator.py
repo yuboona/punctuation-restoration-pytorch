@@ -1,6 +1,7 @@
 import train.train_use_conf as train
 import inference.inference as inference
-from conf import TRAINCONF as args
+from conf import TRAINCONF5 as args
+from conf import INFERCONF5 as infer_args
 
 # Training Option
 train.parser.add_argument(
@@ -21,4 +22,4 @@ if __name__ == "__main__":
         train.main(args)
     elif s.test is True:
         print("Inferencing", "*"*80)
-        inference.main(args)
+        inference.main(infer_args)

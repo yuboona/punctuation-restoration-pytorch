@@ -164,13 +164,16 @@ class NoPuncTextDataset(object):
         for token in txt_seqs:
             input_data.append(self.word2id.get(token, self.word2id["<UNK>"]))
         # code below is for using 100 as a hidden size
-        self.in_len = len(input_data) // 100
-        len_tmp = self.in_len * 100
-        input_data = input_data[:len_tmp]
-        txt_seqs = txt_seqs[:len_tmp]
+        length = len(input_data)
+        self.in_len = length // 100 if length % 100 == 0 else length//100+1
 
-        self.input_data = torch.tensor(np.array(input_data, dtype='i8').reshape(-1, 100))
-        self.txt_seqs = np.array(txt_seqs).reshape(-1, 100)
+        # ****************************************************************************
+        # At inference phrase, seq lenth don't need be exactly 100
+        self.input_data = [input_data[(i)*100:(i+1)*100] for i in range(self.in_len)]
+        self.txt_seqs = [txt_seqs[(i)*100:(i+1)*100] for i in range(self.in_len)]
+
+        # input_data = input_data[:len_tmp]
+        # txt_seqs = txt_seqs[:len_tmp]
 
 
 def collate_fn(data):
