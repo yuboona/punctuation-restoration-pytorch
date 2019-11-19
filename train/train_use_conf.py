@@ -134,12 +134,18 @@ def main(args):
         vocab_size=vocab_len,
         embedding_size=200,
         hidden_size=100,
-        num_layers=1,
+        num_layers=args.num_layers,
         num_class=num_class
     )
 
     # Loss****************************************************************************
-    criterion = nn.CrossEntropyLoss(ignore_index=-1)
+    # criterion = nn.CrossEntropyLoss(ignore_index=-1)
+    criterion = nn.CrossEntropyLoss(
+        ignore_index=-1,
+        weight=torch.from_numpy(
+            np.array([2, 2, 5, 5, 5, 0.2])
+            ).float()
+        )
 
     # optimizer***********************************************************************
     optimizer = torch.optim.Adam(

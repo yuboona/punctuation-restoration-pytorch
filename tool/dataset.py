@@ -151,6 +151,7 @@ class NoPuncTextDataset(object):
             索引
         """
         return self.input_data[index], self.txt_seqs[index]
+        # return self.input_data, self.txt_seqs
 
     def preprocess(self, txt_seqs: list):
         """Transform the word in .txt to be word_dict_id.
@@ -171,6 +172,10 @@ class NoPuncTextDataset(object):
         # At inference phrase, seq lenth don't need be exactly 100
         self.input_data = [input_data[(i)*100:(i+1)*100] for i in range(self.in_len)]
         self.txt_seqs = [txt_seqs[(i)*100:(i+1)*100] for i in range(self.in_len)]
+
+        # self.in_len = 1
+        # self.input_data = input_data
+        # self.txt_seqs = txt_seqs
 
         # input_data = input_data[:len_tmp]
         # txt_seqs = txt_seqs[:len_tmp]

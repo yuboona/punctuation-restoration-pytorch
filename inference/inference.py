@@ -25,7 +25,7 @@ def main(args):
         ofile = open(args.output, 'w', encoding='utf-8')
         output, endline = ofile.write, '\n'
         # print(output==print)
-
+    print(len(dataset))
     for i, (id_seq, txt_seq) in enumerate(dataset):
         # print(id_seq.size())
         # Note: As a Input, id_seq must be shape of (batch_size, seq_len)
@@ -45,7 +45,7 @@ def main(args):
 
         # add punc to text
         result = add_punc_to_txt(txt_seq, predict, dataset.id2punc)
-
+        # print(result[:30])
         output(result + endline)
 
     if output != print:
