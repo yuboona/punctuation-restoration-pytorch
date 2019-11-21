@@ -1,12 +1,10 @@
-"""
-data_modern_one_character_5punc
+"""data_modern_one_character_5punc
 """
 # data path
-txt_data = './data6_5punc_PFDSJ/test'
+train_data = './data6_5punc_PFDSJ/train'
+cv_data = './data6_5punc_PFDSJ/valid'
 vocab = './data6_5punc_PFDSJ/vocab'
 punc_vocab = './data6_5punc_PFDSJ/punc_vocab'
-# cuda()
-cuda = False
 # train from prev checpoint
 continue_from = ''
 # 保存各个时间点的模型
@@ -34,9 +32,8 @@ print_freq = 10
 # ######### model hyper parameters##########################################
 # 分类种类num_clss:default=3
 num_class = 6
+# lstm层数
+num_layers = 2
 # **************************************************************************
 # ######## save and load model##############################################
-model_path = './exp/PRnet6/final6.pth.tar'
-# **************************************************************************
-# ######## output puctuated test############################################
-output = './out/out_data6_2lyr2_new_loss4'
+model_path = 'final6.pth.tar'

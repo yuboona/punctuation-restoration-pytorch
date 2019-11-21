@@ -1,7 +1,7 @@
 import train.train_use_conf as train
 import inference.inference as inference
-from conf import TRAINCONF6 as args
-from conf import INFERCONF6 as infer_args
+from conf import TRAINCONF9 as args
+from conf import INFERCONF9_seg_pfdsj as infer_args
 
 # Training Option
 train.parser.add_argument(

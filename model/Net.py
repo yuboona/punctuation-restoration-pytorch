@@ -25,10 +25,10 @@ class LSTMPR(nn.Module):
         self.embedding = nn.Embedding(vocab_size, embedding_size)
         # print(hidden_size)
         # print(embedding_size)
-        self.lstm = nn.LSTM(embedding_size, hidden_size, num_layers, batch_first=True)
+        self.lstm = nn.LSTM(embedding_size, hidden_size, num_layers, bidirectional=True, batch_first=True)
         # Here is a one direction LSTM. If bidirection LSTM, (hidden_size*2(,))
-        # self.fc = nn.Linear(hidden_size*2, num_class)
-        self.fc = nn.Linear(hidden_size, num_class)
+        self.fc = nn.Linear(hidden_size*2, num_class)
+        # self.fc = nn.Linear(hidden_size, num_class)
         self.init_weights()
 
     def init_weights(self, init_range=0.1):
@@ -46,8 +46,12 @@ class LSTMPR(nn.Module):
                 p.data.fill_(0)
 
     def init_hidden(self, batch_size):
-        h = Variable(torch.zeros(self.num_layers*1, batch_size, self.hidden_size))
-        c = Variable(torch.zeros(self.num_layers*1, batch_size, self.hidden_size))
+        # h = Variable(torch.zeros(self.num_layers*1, batch_size, self.hidden_size))
+        # c = Variable(torch.zeros(self.num_layers*1, batch_size, self.hidden_size))
+
+        # when bidirection
+        h = Variable(torch.zeros(self.num_layers*2, batch_size, self.hidden_size))
+        c = Variable(torch.zeros(self.num_layers*2, batch_size, self.hidden_size))
         # h for storing hidden layer weight，c for storing cell states
         return (h, c)
 

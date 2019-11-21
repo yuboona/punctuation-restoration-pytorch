@@ -1,16 +1,14 @@
-"""
-data_modern_one_character_5punc
+"""data_modern_seg_5punc
 """
 # data path
-txt_data = './data6_5punc_PFDSJ/test'
-vocab = './data6_5punc_PFDSJ/vocab'
-punc_vocab = './data6_5punc_PFDSJ/punc_vocab'
-# cuda()
-cuda = False
+train_data = './data9_5punc_PFDSJ_seg/train'
+cv_data = './data9_5punc_PFDSJ_seg/valid'
+vocab = './data9_5punc_PFDSJ_seg/vocab'
+punc_vocab = './data9_5punc_PFDSJ_seg/punc_vocab'
 # train from prev checpoint
 continue_from = ''
 # 保存各个时间点的模型
-save_folder = './exp/PRnet6'
+save_folder = './exp/PRnet9'
 # 是否在各个epoch结束保存检查点
 checkpoint = True
 # batch的尺寸:default=10
@@ -34,9 +32,8 @@ print_freq = 10
 # ######### model hyper parameters##########################################
 # 分类种类num_clss:default=3
 num_class = 6
+# lstm层数
+num_layers = 3
 # **************************************************************************
 # ######## save and load model##############################################
-model_path = './exp/PRnet6/final6.pth.tar'
-# **************************************************************************
-# ######## output puctuated test############################################
-output = './out/out_data6_2lyr2_new_loss4'
+model_path = 'final9.pth.tar'

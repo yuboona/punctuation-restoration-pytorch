@@ -2,9 +2,9 @@
 data_modern_one_character_5punc
 """
 # data path
-txt_data = './data6_5punc_PFDSJ/test'
-vocab = './data6_5punc_PFDSJ/vocab'
-punc_vocab = './data6_5punc_PFDSJ/punc_vocab'
+txt_data = './data7/test'
+vocab = './data7/vocab'
+punc_vocab = './data7/punc_vocab'
 # cuda()
 cuda = False
 # train from prev checpoint
@@ -39,4 +39,4 @@ num_class = 6
 model_path = './exp/PRnet6/final6.pth.tar'
 # **************************************************************************
 # ######## output puctuated test############################################
-output = './out/out_data6_2lyr2_new_loss4'
+output = './out/out_data7_v1'

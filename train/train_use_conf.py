@@ -47,6 +47,7 @@ def run_one_epoch(
     """
     total_loss = 0.0
     total_acc = 0.0
+    total_acc_2 = 0.0
     total_words = 0
     hidden = model.init_hidden(args.batch_size)
     # print("hidden_size:", hidden[0].size())
@@ -77,28 +78,40 @@ def run_one_epoch(
         total_loss += loss.data
         # argmax是保持大小关系的到百分比数值的映射，不用argmax也有max
         _, predict = torch.max(scores, 1)  # score is `[(0,1,2), (), ...]`
-        correct = (predict == labels.view(-1)).sum().data
+        labels = labels.view(-1)
+        tmp = (predict == labels)
+        res = tmp.sum().data
+        correct = [0. for i in range(args.num_class)]
+        total = [0. for i in range(args.num_class)]
+        for label_idx in range(len(labels)):
+            label_single = labels[label_idx]
+            correct[label_single] += int(tmp[label_idx].data)
+            total[label_single] += 1
         # words in total
         words = 1
         for s in inputs.size():
             words *= s
-        acc = 100.0 * correct / words
+        acc = 100.0 * res / words
+        acc_2 = 100.0 * sum(correct[1:]) / sum(total[1:])
+        # acc_2 = 100.0 * correct[5] / total[5]
         total_acc += acc
+        total_acc_2 += acc_2
         total_words += words
 
         if args.verbose and i % args.print_freq == 0:
             print('Epoch {0} | Iter {1} | Average Loss {2:.3f} | '
-                  'Perplexity {3:.3f} | Acc {4:.3f} | {5} words/s | '
+                  'Perplexity {3:.3f} | Acc {4:.3f} | Acc_2 {7:.3f} | {5} words/s | '
                   '{6:.1f} ms/batch'.format(
                       epoch + 1, i, total_loss / (i + 1),
                       np.exp(total_loss / (i + 1)),
                       total_acc / (i + 1),
                       int(total_words / (time.time()-start)),
-                      1000*(time.time()-start)/(i+1)),
+                      1000*(time.time()-start)/(i+1),
+                      total_acc_2 / (i+1)),
                   flush=True)
         del loss
         del scores
-    return total_loss / (i + 1), total_acc / (i+1)
+    return total_loss / (i + 1), total_acc / (i+1), total_acc_2 / (i+1)
 
 
 def main(args):
@@ -143,7 +156,14 @@ def main(args):
     criterion = nn.CrossEntropyLoss(
         ignore_index=-1,
         weight=torch.from_numpy(
-            np.array([2, 2, 5, 5, 5, 0.2])
+            np.array([1, 1, 1, 1, 1, 1])
+            # np.array([2, 3, 30, 15, 30, 0.1])
+            # np.array([2, 1, 15, 10, 15, 0.1])
+            # np.array([8, 2, 15, 10, 15, 0.5])
+            # np.array([15, 24, 243, 117, 269, 1])
+            # np.array([1.5, 2.4, 24.3, 11.7, 26.9, 0.1])
+
+
             ).float()
         )
 
@@ -183,14 +203,15 @@ def main(args):
         # set train mode to make train and test be different
         model.train()
         start = time.time()
-        avg_loss, avg_acc = run_one_epoch(tr_data_loader, model, criterion,                                         optimizer, epoch, args)
+        avg_loss, avg_acc, avg_acc_2 = run_one_epoch(tr_data_loader, model, criterion,                                         optimizer, epoch, args)
         print('-'*85)
         print('Train Summary | End of Epoch {0} | Time {1:.2f}s | '
-              'Train Loss {2:.3f} | Train Acc {3:.2f} '.format(
+              'Train Loss {2:.3f} | Train Acc {3:.2f} | Train Acc_2 {4:.2f} '.format(
                   epoch + 1,
                   time.time() - start,
                   avg_loss,
-                  avg_acc))
+                  avg_acc,
+                  avg_acc_2))
         print('-'*85)
 
         # ######## Save model at each epoch
@@ -207,15 +228,15 @@ def main(args):
         # 进入验证状态
         model.eval()
         start = time.time()
-        val_loss, val_acc = run_one_epoch(
+        val_loss, val_acc, val_acc_2 = run_one_epoch(
                                             cv_data_loader, model,
                                             criterion, optimizer,
                                             epoch, args, cross_valid=True
                                             )
         print('-'*85)
         print('Valid Summary | End of Epoch {0} | Time {1:.2f}s | '
-              'Valid Loss {2:.3f} | Valid Acc {3:.2f} '.format(
-                epoch + 1, time.time() - start, val_loss, val_acc))
+              'Valid Loss {2:.3f} | Valid Acc {3:.2f} | Valid Acc_2 {4:.2f}'.format(
+                epoch + 1, time.time() - start, val_loss, val_acc, val_acc_2))
         print('-'*85)
 
         # ######## Adjust learning rate, halving
