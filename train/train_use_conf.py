@@ -156,7 +156,12 @@ def main(args):
     criterion = nn.CrossEntropyLoss(
         ignore_index=-1,
         weight=torch.from_numpy(
-            np.array([1, 1, 1, 1, 1, 1])
+            # np.array([1, 1, 1, 1, 1])
+            # np.array([0.1, 1.4, 2.3, 1, 1])
+            np.array([1, 3, 2, 4, 4])  # 4punc_v5
+            # np.array([1, 3, 5, 2, 2])  # 4punc_v4 句号逗号太多了
+            # np.array([1, 2, 3, 2, 2])  # 4punc_v2还不错，分得比较细，但是分得还算比较符合语感
+            # np.array([8.7, 6.8, 4.2, 0.4, 0.8])    # 4punc_v3完全正比，效果和11111一样。没有问号句号，句子过长，有些不符合语感
             # np.array([2, 3, 30, 15, 30, 0.1])
             # np.array([2, 1, 15, 10, 15, 0.1])
             # np.array([8, 2, 15, 10, 15, 0.5])
