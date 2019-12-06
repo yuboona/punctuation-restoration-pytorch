@@ -43,6 +43,8 @@ class PuncDataset(data.Dataset):
         tmp_seqs = open(train_path, encoding='utf-8').readlines()
         self.txt_seqs = [i for seq in tmp_seqs for i in seq.split()]
         # print(self.txt_seqs[:10])
+        with open('./txt_seq', 'w', encoding='utf-8') as w:
+            print(self.txt_seqs, file=w)
         self.preprocess(self.txt_seqs)
 
     def __len__(self):
@@ -68,7 +70,9 @@ class PuncDataset(data.Dataset):
             文本每个单词跟随一个空格，符号也跟一个空格
         """
         input_data = []
+        input_r = []
         label = []
+        label_r = []
         punc = " "
         for token in txt_seqs:
             if token in self.punc2id:
@@ -76,13 +80,19 @@ class PuncDataset(data.Dataset):
             else:
                 input_data.append(self.word2id.get(token, self.word2id["<UNK>"]))
                 label.append(self.punc2id[punc])
+                input_r.append(token)
+                label_r.append(punc)
                 # 这个设计使得标点符号的下一个单词的label是标点符号，将符号两侧的知识加入到了网络中
                 punc = " "
+        with open('./inp_lbl', 'w', encoding='utf-8') as w:
+            print('输入数据是：', input_r, file=w)
+            print('输出标签是：', label_r, file=w)
 
         # code below is for using 100 as a hidden size
         self.in_len = len(input_data) // 100
         len_tmp = self.in_len * 100 - 1
         input_data = input_data[:len_tmp]
+        print(len(input_data))
         label = label[:len_tmp]
         input_data.append(self.word2id['<END>'])
         label.append(self.punc2id[punc])

@@ -297,8 +297,8 @@ class LSTMPR(nn.Module):
         # c = Variable(torch.zeros(self.num_layers*1, batch_size, self.hidden_size))
 
         # when bidirection
-        h = Variable(torch.zeros(self.num_layers*2, batch_size, self.hidden_size))
-        c = Variable(torch.zeros(self.num_layers*2, batch_size, self.hidden_size))
+        h = Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size))
+        c = Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size))
         # h for storing hidden layer weight，c for storing cell states
         return (h, c)
 
