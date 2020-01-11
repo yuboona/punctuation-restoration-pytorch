@@ -154,7 +154,7 @@ def main(args):
     # Loss****************************************************************************
     # criterion = nn.CrossEntropyLoss(ignore_index=-1)
     criterion = nn.CrossEntropyLoss(
-        ignore_index=-1,
+        # ignore_index=-1,
         weight=torch.from_numpy(
             # np.array([1, 1, 1, 1, 1])
             # np.array([0.1, 1.4, 2.3, 1, 1])
@@ -167,8 +167,6 @@ def main(args):
             # np.array([8, 2, 15, 10, 15, 0.5])
             # np.array([15, 24, 243, 117, 269, 1])
             # np.array([1.5, 2.4, 24.3, 11.7, 26.9, 0.1])
-
-
             ).float()
         )
 
