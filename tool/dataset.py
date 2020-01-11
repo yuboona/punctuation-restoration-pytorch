@@ -84,9 +84,9 @@ class PuncDataset(data.Dataset):
                 label_r.append(punc)
                 # 这个设计使得标点符号的下一个单词的label是标点符号，将符号两侧的知识加入到了网络中
                 punc = " "
-        with open('./inp_lbl', 'w', encoding='utf-8') as w:
-            print('输入数据是：', input_r, file=w)
-            print('输出标签是：', label_r, file=w)
+        # with open('./inp_lbl', 'w', encoding='utf-8') as w:
+        #     print('输入数据是：', input_r, file=w)
+        #     print('输出标签是：', label_r, file=w)
 
         # code below is for using 100 as a hidden size
         self.in_len = len(input_data) // 100
