@@ -16,8 +16,6 @@
 
 ## * Graph
 
-- viznet
-- visio
 - Goodnote
 
 ## * Requirements
@@ -28,15 +26,14 @@
 ## * Run the code
 
 - Training
-  1. In windows: execute `start run.bat` in the cmd in this dir.
-  2. In linux: execute `./run.sh` in bash in this dir. (your needs `chmod` to give `execute right`)
-  > or
+  ~~1. In windows: execute `start run.bat` in the cmd in this dir.~~
+  ~~2. In linux: execute `./run.sh` in bash in this dir. (your needs `chmod` to give `execute right`)~~
+  ~~> or~~(deprecated)
   1. In windows CMD: execute `python punctuator.py -tr > ./log/yourLOgName &`  at root dir of this projct.
   2. In linux bash: execute `python punctuator.py -tr > ./log/yourLogName &` at root dir of this projct.
 - Inference
   1. In windows CMD: execute `python punctuator.py -t > ./log/yourLOgName &`  at root dir of this projct.
   2. In linux bash: execute `python punctuator.py -t > ./log/yourLogName &` at root dir of this projct.
-
 
 ## * DataSet
 

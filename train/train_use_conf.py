@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from model.Net import LSTMPR
+from model.Net import BiLSTMPR
 
 from tool.dataset import get_loader, load_vocab
 import tool.utils as utils
@@ -50,7 +50,7 @@ def run_one_epoch(
     total_acc_2 = 0.0
     total_words = 0
     hidden = model.init_hidden(args.batch_size)
-    # print("hidden_size:", hidden[0].size())
+    print("hidden_size:", hidden[0].size())
     start = time.time()
     for i, (inputs, labels) in enumerate(data_loader):
         # 1. mini_batch data******************************************************
@@ -60,7 +60,7 @@ def run_one_epoch(
         # 2. forward and compute loss**********************************************
         optimizer.zero_grad()
         # forward compute, use *model()* call the forward()
-        print('', hidden[0].size())
+        # print('', hidden[0].size())
         scores, hidden = model(inputs, hidden, train=True)
         scores = scores.view(-1, args.num_class)
         # criterion() receive a 1.train out and a 2.labels to compute the CrossEntropy
@@ -143,7 +143,7 @@ def main(args):
     num_class = len(punc)
 
     # Model*****************************************************************************
-    model = LSTMPR(
+    model = BiLSTMPR(
         vocab_size=vocab_len,
         embedding_size=200,
         hidden_size=100,
@@ -154,20 +154,20 @@ def main(args):
     # Loss****************************************************************************
     # criterion = nn.CrossEntropyLoss(ignore_index=-1)
     criterion = nn.CrossEntropyLoss(
-        # ignore_index=-1,
-        weight=torch.from_numpy(
-            # np.array([1, 1, 1, 1, 1])
-            # np.array([0.1, 1.4, 2.3, 1, 1])
-            np.array([1, 3, 2, 4, 4])  # 4punc_v5
-            # np.array([1, 3, 5, 2, 2])  # 4punc_v4 句号逗号太多了
-            # np.array([1, 2, 3, 2, 2])  # 4punc_v2还不错，分得比较细，但是分得还算比较符合语感
-            # np.array([8.7, 6.8, 4.2, 0.4, 0.8])    # 4punc_v3完全正比，效果和11111一样。没有问号句号，句子过长，有些不符合语感
-            # np.array([2, 3, 30, 15, 30, 0.1])
-            # np.array([2, 1, 15, 10, 15, 0.1])
-            # np.array([8, 2, 15, 10, 15, 0.5])
-            # np.array([15, 24, 243, 117, 269, 1])
-            # np.array([1.5, 2.4, 24.3, 11.7, 26.9, 0.1])
-            ).float()
+        ignore_index=-1,
+        # weight=torch.from_numpy(
+        #     # np.array([1, 1, 1, 1, 1])
+        #     # np.array([0.1, 1.4, 2.3, 1, 1])
+        #     np.array([1, 3, 2, 4, 4])  # 4punc_v5
+        #     # np.array([1, 3, 5, 2, 2])  # 4punc_v4 句号逗号太多了
+        #     # np.array([1, 2, 3, 2, 2])  # 4punc_v2还不错，分得比较细，但是分得还算比较符合语感
+        #     # np.array([8.7, 6.8, 4.2, 0.4, 0.8])    # 4punc_v3完全正比，效果和11111一样。没有问号句号，句子过长，有些不符合语感
+        #     # np.array([2, 3, 30, 15, 30, 0.1])
+        #     # np.array([2, 1, 15, 10, 15, 0.1])
+        #     # np.array([8, 2, 15, 10, 15, 0.5])
+        #     # np.array([15, 24, 243, 117, 269, 1])
+        #     # np.array([1.5, 2.4, 24.3, 11.7, 26.9, 0.1])
+        #     ).float()
         )
 
     # optimizer***********************************************************************
@@ -223,7 +223,7 @@ def main(args):
                 save_folder,
                 'epoch{}.pth.tar'.format(epoch+1)
                 )
-            torch.save(LSTMPR.serialize(model, optimizer, epoch+1), file_path)
+            torch.save(BiLSTMPR.serialize(model, optimizer, epoch+1), file_path)
             print('Saving checkpoint model to {}'.format(file_path))
 
         # ######## Cross validation
@@ -264,6 +264,6 @@ def main(args):
             best_val_loss = val_loss
             file_path = os.path.join(save_folder, args.model_path)
             torch.save(
-                LSTMPR.serialize(model, optimizer, epoch+1),
+                BiLSTMPR.serialize(model, optimizer, epoch+1),
                 file_path)
             print("Find better validated model, saving to %s" % file_path)

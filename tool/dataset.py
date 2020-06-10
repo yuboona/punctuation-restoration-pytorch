@@ -22,12 +22,13 @@ class PuncDataset(data.Dataset):
     data.Dataset :
         Dataset is a abstract class, representing the real data.
     """
-    def __init__(self, train_path, vocab_path, punc_path):
+    def __init__(self, train_path, vocab_path, punc_path, seq_len=100):
         # 检查文件是否存在
         print(train_path)
         assert os.path.exists(train_path), "train文件不存在"
         assert os.path.exists(vocab_path), "词典文件不存在"
         assert os.path.exists(punc_path), "标点文件不存在"
+        self.seq_len = seq_len
 
         self.word2id = load_vocab(
             vocab_path,
@@ -43,8 +44,8 @@ class PuncDataset(data.Dataset):
         tmp_seqs = open(train_path, encoding='utf-8').readlines()
         self.txt_seqs = [i for seq in tmp_seqs for i in seq.split()]
         # print(self.txt_seqs[:10])
-        with open('./txt_seq', 'w', encoding='utf-8') as w:
-            print(self.txt_seqs, file=w)
+        # with open('./txt_seq', 'w', encoding='utf-8') as w:
+        #     print(self.txt_seqs, file=w)
         self.preprocess(self.txt_seqs)
 
     def __len__(self):
@@ -70,37 +71,137 @@ class PuncDataset(data.Dataset):
             文本每个单词跟随一个空格，符号也跟一个空格
         """
         input_data = []
-        input_r = []
         label = []
+        input_r = []
         label_r = []
-        punc = " "
+        # txt_seqs is a list like: ['char', 'char', 'char', '*，*', 'char', ......]
+        count = 0
+        length = len(txt_seqs)
         for token in txt_seqs:
+            count += 1
+            if count == length:
+                break
             if token in self.punc2id:
-                punc = token
-            else:
+                continue
+            punc = txt_seqs[count]
+            if punc not in self.punc2id:
+                # print('标点{}：'.format(count), self.punc2id[" "])
+                label.append(self.punc2id[" "])
                 input_data.append(self.word2id.get(token, self.word2id["<UNK>"]))
+                input_r.append(token)
+                label_r.append(' ')
+            else:
+                # print('标点{}：'.format(count), self.punc2id[punc])
                 label.append(self.punc2id[punc])
+                input_data.append(self.word2id.get(token, self.word2id["<UNK>"]))
                 input_r.append(token)
                 label_r.append(punc)
-                # 这个设计使得标点符号的下一个单词的label是标点符号，将符号两侧的知识加入到了网络中
-                punc = " "
-        # with open('./inp_lbl', 'w', encoding='utf-8') as w:
-        #     print('输入数据是：', input_r, file=w)
-        #     print('输出标签是：', label_r, file=w)
-
+        with open('./inp_lbl', 'w', encoding='utf-8') as w:
+            print('输入数据是：', input_r, file=w)
+            print('输出标签是：', label_r, file=w)
+        with open('./inp_lbl_id', 'w', encoding='utf-8') as w:
+            print('输入数据是：', input_data, file=w)
+            print('输出标签是：', label, file=w)
+        if len(input_data) != len(label):
+            assert 'error: length input_data != label'
         # code below is for using 100 as a hidden size
-        self.in_len = len(input_data) // 100
-        len_tmp = self.in_len * 100 - 1
-        input_data = input_data[:len_tmp]
         print(len(input_data))
+        self.in_len = len(input_data) // 100
+        len_tmp = self.in_len * 100
+        input_data = input_data[:len_tmp]
         label = label[:len_tmp]
-        input_data.append(self.word2id['<END>'])
-        label.append(self.punc2id[punc])
-        # dt = np.dtype('i8')
+
         self.input_data = torch.tensor(np.array(input_data, dtype='i8').reshape(-1, 100))
         self.label = torch.tensor(np.array(label, dtype='i8').reshape(-1, 100))
-        # print('last: ', self.input_data[-1])
-        # print('len: ', self.in_len)
+
+
+# class PuncDataset(data.Dataset):
+#     """Representing a Dataset
+
+#     superclass
+#     ----------
+#     data.Dataset :
+#         Dataset is a abstract class, representing the real data.
+#     """
+#     def __init__(self, train_path, vocab_path, punc_path):
+#         # 检查文件是否存在
+#         print(train_path)
+#         assert os.path.exists(train_path), "train文件不存在"
+#         assert os.path.exists(vocab_path), "词典文件不存在"
+#         assert os.path.exists(punc_path), "标点文件不存在"
+
+#         self.word2id = load_vocab(
+#             vocab_path,
+#             extra_word_list=['<UNK>', '<END>']
+#         )
+#         self.id2word = {v: k for k, v in self.word2id.items()}
+#         self.punc2id = load_vocab(
+#             punc_path,
+#             extra_word_list=[" "]
+#         )
+#         self.id2punc = {k: v for (v, k) in self.punc2id.items()}
+
+#         tmp_seqs = open(train_path, encoding='utf-8').readlines()
+#         self.txt_seqs = [i for seq in tmp_seqs for i in seq.split()]
+#         # print(self.txt_seqs[:10])
+#         with open('./txt_seq', 'w', encoding='utf-8') as w:
+#             print(self.txt_seqs, file=w)
+#         self.preprocess(self.txt_seqs)
+
+#     def __len__(self):
+#         """return the sentence nums in .txt
+#         """
+#         return self.in_len
+
+#     def __getitem__(self, index):
+#         """返回指定索引的张量对 (输入文本id的序列 , 其对应的标点id序列)
+
+#         Parameters
+#         ----------
+#         index : int
+#             索引
+#         """
+#         return self.input_data[index], self.label[index]
+
+#     def preprocess(self, txt_seqs: list):
+#         """将文本转为单词和应预测标点的id pair
+#         Parameters
+#         ----------
+#         txt : 文本
+#             文本每个单词跟随一个空格，符号也跟一个空格
+#         """
+#         input_data = []
+#         input_r = []
+#         label = []
+#         label_r = []
+#         punc = " "
+#         for token in txt_seqs:
+#             if token in self.punc2id:
+#                 punc = token
+#             else:
+#                 input_data.append(self.word2id.get(token, self.word2id["<UNK>"]))
+#                 label.append(self.punc2id[punc])
+#                 input_r.append(token)
+#                 label_r.append(punc)
+#                 # 这个设计使得标点符号的下一个单词的label是标点符号，将符号两侧的知识加入到了网络中
+#                 punc = " "
+#         # with open('./inp_lbl', 'w', encoding='utf-8') as w:
+#         #     print('输入数据是：', input_r, file=w)
+#         #     print('输出标签是：', label_r, file=w)
+
+#         # code below is for using 100 as a hidden size
+#         self.in_len = len(input_data) // 100
+#         len_tmp = self.in_len * 100 - 1
+#         input_data = input_data[:len_tmp]
+#         print(len(input_data))
+#         label = label[:len_tmp]
+#         input_data.append(self.word2id['<END>'])
+#         label.append(self.punc2id[punc])
+#         # dt = np.dtype('i8')
+#         self.input_data = torch.tensor(np.array(input_data, dtype='i8').reshape(-1, 100))
+#         self.label = torch.tensor(np.array(label, dtype='i8').reshape(-1, 100))
+#         # print('last: ', self.input_data[-1])
+#         # print('len: ', self.in_len)
 
 
 class NoPuncTextDataset(object):
