@@ -26,6 +26,7 @@
 ## * Run the code
 
 - Training
+
   ~~1. In windows: execute `start run.bat` in the cmd in this dir.~~
   ~~2. In linux: execute `./run.sh` in bash in this dir. (your needs `chmod` to give `execute right`)~~
   ~~> or~~(deprecated)
