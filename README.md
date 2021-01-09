@@ -33,7 +33,7 @@
   1. In windows CMD: execute `python punctuator.py -tr > ./log/yourLOgName &`  at root dir of this projct.
   2. In linux bash: execute `python punctuator.py -tr > ./log/yourLogName &` at root dir of this projct.
 - Inference
-  1. In windows CMD: execute `python punctuator.py -tr > ./log/yourLOgName &`  at root dir of this projct.
+  1. In windows CMD: execute `python punctuator.py -t > ./log/yourLOgName &`  at root dir of this projct.
   2. In linux bash: execute `python punctuator.py -t > ./log/yourLogName &` at root dir of this projct.
 
 ## * DataSet
