@@ -1,13 +1,14 @@
 import io
 import sys
+import os
 
 import numpy as np
 import torch
 from torch.autograd import Variable
 
 from tool.dataset import NoPuncTextDataset
-from model.Net import LSTMPR
-from tool.utils import add_punc_to_txt
+from model.Net import LSTMPR, BiLSTMPR
+from tool.utils import add_punc_to_txt_normal
 
 
 # Change the standard out encoding to utf-8
@@ -16,13 +17,21 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def main(args):
     dataset = NoPuncTextDataset(args.txt_data, args.vocab, args.punc_vocab)
-    model = LSTMPR.load_model(args.model_path, cuda=args.cuda)
+    # model = LSTMPR.load_model(args.model_path, cuda=args.cuda)
+    model = BiLSTMPR.load_model(args.model_path, cuda=args.cuda)
 
     # output result
     if args.output == '-':
         output, endline = print, ''
     else:
-        ofile = open(args.output, 'w', encoding='utf-8')
+        s = args.output
+        final_ = s.split('/')
+        final_ = final_[-1]
+        s = s.replace(final_, '')
+        if not os.path.exists(s):
+            os.makedirs(s)
+
+        ofile = open(args.output, 'w+', encoding='utf-8')
         output, endline = ofile.write, '\n'
         # print(output==print)
     print(len(dataset))
@@ -44,7 +53,7 @@ def main(args):
         predict = predict.data.cpu().numpy().tolist()
 
         # add punc to text
-        result = add_punc_to_txt(txt_seq, predict, dataset.id2punc)
+        result = add_punc_to_txt_normal(txt_seq, predict, dataset.id2punc)
         # print(result[:30])
         output(result + endline)
 
