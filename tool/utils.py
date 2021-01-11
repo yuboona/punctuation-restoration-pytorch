@@ -55,3 +55,24 @@ def add_punc_to_txt(txt_seq: list, predict: list, id2punc: dict):
     # punc = id2punc[predict[i+1]]
     txt_predict += punc
     return txt_predict
+
+
+def add_punc_to_txt_normal(txt_seq: list, predict: list, id2punc: dict):
+    """add punc to text
+
+    Parameters
+    ----------
+    txt_seq : list
+        word sequence without punc
+    predict : list
+        punc_id prediction for every word
+    id2punc : dict
+        punc_id to punctuation
+    """
+    txt_predict = ''
+    for i, word in enumerate(txt_seq):
+        punc = id2punc[predict[i]]
+        txt_predict += word if punc == ' ' else word + punc
+    # punc = id2punc[predict[i+1]]
+    txt_predict += punc
+    return txt_predict
