@@ -2,9 +2,9 @@
 inference seg 4 punc
 """
 # data path
-txt_data = './data8/test'
-vocab = './data8/vocab'
-punc_vocab = './data8/punc_vocab'
+txt_data = './data10_4punc_PFDSJ_seg/test'
+vocab = './data10_4punc_PFDSJ_seg/vocab'
+punc_vocab = './data10_4punc_PFDSJ_seg/punc_vocab'
 # cuda()
 cuda = False
 # train from prev checpoint
@@ -39,4 +39,4 @@ num_class = 5
 model_path = './exp/PRnet10/final10.pth.tar'
 # **************************************************************************
 # ######## output puctuated test############################################
-output = './out/out_data10_v2'
+output = './out/out_data10_v2.txt'
